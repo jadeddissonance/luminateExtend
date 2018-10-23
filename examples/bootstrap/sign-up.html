@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Sign Up for News from American Health Society</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+      /* example site styles */
+      body {
+        padding-top: 40px;
+      }
+    </style>
+    
+    <!--[if lt IE 9]>
+      <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+      <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy">
+      <link href="js/respond.proxy.gif" id="respond-redirect" rel="respond-redirect">
+      <script src="js/respond.proxy.js"></script>
+    <![endif]-->
+    <!--[if gte IE 9]><!-->
+      <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+    <!--<![endif]-->
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html">American Health Society</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="donate.html">Donate</a></li>
+            <li class="dropdown">
+              <a href="get-involved.html" class="dropdown-toggle" data-toggle="dropdown">Get Involved <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="sign-up.html">Get AHS News</a></li>
+                <li><a href="action-center.html">Action Center</a></li>
+                <li><a href="walk-for-health.html">Walk for Health</a></li>
+              </ul>
+            </li>
+          </ul>
+          <form class="navbar-form navbar-right luminateApi hide" id="login-form" method="POST" action="http://shortname.convio.net/site/CRConsAPI" data-luminateApi='{"callback": "loginCallback"}'>
+            <input type="hidden" name="method" value="login">
+            <div class="form-group">
+              <input type="text" class="form-control" id="login-username" name="user_name" placeholder="Username">
+            </div>
+            <div class="form-group">
+              <input type="password" class="form-control" id="login-password" name="password" placeholder="Password">
+            </div>
+            <button type="submit" class="btn btn-success">Login</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="page-header">
+        <h1>Get AHS News</h1>
+      </div>
+      <p>Sign up today to receive the American Health Society's weekly e-newsletter.</p>
+      <form class="form-horizontal luminateApi survey-form" method="POST" action="http://shortname.convio.net/site/CRSurveyAPI" data-luminateApi='{"callback": "submitSurveyCallback", "requiresAuth": "true"}'>
+        <input type="hidden" name="method" value="submitSurvey">
+        <input type="hidden" name="survey_id" value="1234">
+        <div class="form-group">
+          <label for="survey-cons-first-name" class="col-sm-3 col-md-2 control-label">First Name:</label>
+          <div class="col-sm-6">
+            <input type="text" name="cons_first_name" class="form-control" id="survey-cons-first-name">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="survey-cons-last-name" class="col-sm-3 col-md-2 control-label">Last Name:</label>
+          <div class="col-sm-6">
+            <input type="text" name="cons_last_name" class="form-control" id="survey-cons-last-name">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="survey-cons-email" class="col-sm-3 col-md-2 control-label">Email Address:</label>
+          <div class="col-sm-6">
+            <input type="text" name="cons_email" class="form-control" id="survey-cons-email">
+          </div>
+        </div>
+        <input type="hidden" name="cons_email_opt_in" value="true">
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-md-offset-2 col-sm-6">
+            <div class="alert alert-info">
+              By filling out this form, you'll be signed up to receive periodic updates from American Health Society.
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-md-offset-2 col-sm-6">
+            <button type="submit" class="btn btn-primary">Sign Me Up</button>
+          </div>
+        </div>
+      </form>
+      <hr>
+      <footer>
+        <p>&copy; American Health Society 2015</p>
+      </footer>
+    </div>
+    
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+    <script src="js/luminateExtend.js"></script>
+    <script src="js/luminateExtend-examples.js"></script>
+  </body>
+</html>

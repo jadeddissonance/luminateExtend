@@ -1,11 +1,11 @@
 luminateExtend.js
 =================
 
-Version: 1.2 (22-OCT-2012)  
-Requires: jQuery v1.6.4+
+Version: 1.8.1 (18-OCT-2016)  
+Requires: jQuery v1.5.1+ or Zepto v1.1+
 
 luminateExtend.js is a JavaScript library for use with 
-[Luminate Online](http://www.convio.com/our-products/luminate/fundraising.html), a product of Blackbaud. 
+[Luminate Online](https://www.blackbaud.com/online-marketing/luminate-online), a product of Blackbaud. 
 Built on top of jQuery, it provides a JavaScript wrapper around the 
 [Luminate Online REST API](http://open.convio.com/api), with some helper functions and other magic 
 sprinkled in. The library includes support for [all major browsers](#libBrowsers), and can be used both 
@@ -50,10 +50,10 @@ Before using luminateExtend.js, there are a few basic steps you must follow:
    For security reasons, the API and this library limit requests to a list of domains whitelisted by 
    your organization. If you haven't already done so, go to Setup -> Site Options -> Open API 
    Configuration, and click "Edit Javascript/Flash configuration". For the purposes of using this 
-   library, the only option you need to worry about on this page is **2. Trust JavaScript/Flash API from 
-   these domains**. Add any domains where you will use this library to the list. As noted on the page, 
-   you can use an asterisk as a wildcard if your website has multiple subdomains, e.g. 
-   "\*.myorganization.com".
+   library, the only options you need to worry about on this page are **1. Allow JavaScript/Flash API 
+   from these domains** and **2. Trust JavaScript/Flash API from these domains**. Add any domains where 
+   you will use this library to these lists. As noted on the page, you can use an asterisk as a wildcard 
+   if your website has multiple subdomains, e.g. "\*.myorganization.com".
  
  * Create luminateExtend_server PageBuilder page 
    
@@ -66,38 +66,35 @@ Before using luminateExtend.js, there are a few basic steps you must follow:
    [luminateExtend_server.html](https://github.com/noahcooper/luminateExtend/blob/master/luminateExtend_server.html).
    
    The library uses a hidden request to this PageBuilder page to handle cross-domain communication in 
-   older browsers (and, in some cases, all browsers). See the description of 
-   [luminateExtend.api.request](#apiObj) for more details.
- 
- * Upload luminateExtend_client.html to your external website
-   
-   On the website where you will be using the library (e.g. your organization's Drupal or Wordpress 
-   site), upload the attached file, 
-   [luminateExtend_client.html](https://github.com/noahcooper/luminateExtend/blob/master/luminateExtend_client.html). 
-   The file should be placed in the root of your website.
-   
-   The library uses a hidden request to this page to handle cross-domain communication in IE7. See the 
-   description of [luminateExtend.api](#apiObj) for more details.
+   older browsers. See the description of [luminateExtend.api.request](#apiObj) for more details.
 
 <a name="includingLib"></a>
 Including the library
 ---------------------
 
 Once you've uploaded 
-[luminateExtend.js](https://github.com/noahcooper/luminateExtend/blob/master/luminateExtend.js) to your 
-website, including the library on a page is easy &mdash; simply add the following script tag to the head, 
-somewhere below where jQuery is included. Change out the file path as needed, depending on where you 
-uploaded the file.
+[luminateExtend.min.js](https://github.com/noahcooper/luminateExtend/blob/master/luminateExtend.min.js) to your 
+website, including the library on a page is easy &mdash; simply pull in the library somewhere below where 
+jQuery is included. (Change out the file path as needed, depending on where you uploaded the file on your site.)
 
 ```  html
-<script src="../js/luminateExtend.js"></script>
+<script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="../js/luminateExtend.min.js"></script>
 ```
 
-If you aren't yet including jQuery on your website, use the Google CDN.
+If you prefer to use a CDN, luminateExtend.js is available via [cdnjs](http://cdnjs.com/libraries/luminateExtend).
 
 ```  html
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script src="../js/luminateExtend.js"></script>
+<script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.8.1/luminateExtend.min.js"></script>
+```
+
+As of v1.6, luminateExtend.js can be used with [Zepto](http://zeptojs.com) in lieu of jQuery if you so choose. 
+(Note: You must use Zepto 1.1 or higher -- Zepto 1.0 did not support cross-domain requests with cookies.)
+
+```  html
+<script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/luminateExtend/1.8.1/luminateExtend.min.js"></script>
 ```
 
 <a name="luminateExtendObj"></a>
@@ -114,7 +111,7 @@ luminateExtend.library
 `luminateExtend.library` contains information about the library.
 
 ```  js
-console.log(luminateExtend.library.version); // logs a value like "1.0"
+console.log(luminateExtend.library.version); // logs a value like "1.8.1"
 ```
 
 The library object contains the following:
@@ -131,28 +128,24 @@ luminateExtend.init
 called once per page, e.g. immediately below where the library is included in the head.
 
 ```  js
-$(function() {
-  luminateExtend.init({
-    apiKey: '123456789', 
-    path: {
-      nonsecure: 'http://www.myorganization.com/site/', 
-      secure: 'https://secure2.convio.net/myorg/site/'
-    }
-  });
+luminateExtend.init({
+  apiKey: '123456789', 
+  path: {
+    nonsecure: 'http://www.myorganization.com/site/', 
+    secure: 'https://secure2.convio.net/myorg/site/'
+  }
 });
 ```
 
 luminateExtend is itself an alias for the init method when called directly.
 
 ```  js
-$(function() {
-  luminateExtend({
-    apiKey: '123456789', 
-    path: {
-      nonsecure: 'http://www.myorganization.com/site/', 
-      secure: 'https://secure2.convio.net/myorg/site/'
-    }
-  });
+luminateExtend({
+  apiKey: '123456789', 
+  path: {
+    nonsecure: 'http://www.myorganization.com/site/', 
+    secure: 'https://secure2.convio.net/myorg/site/'
+  }
 });
 ```
 
@@ -167,7 +160,7 @@ to use with all API requests, including **categoryId**, **centerId**, **source**
 
 The API Key for your organization's Luminate Online website. When using the library within Luminate 
 Online, this can be defined dynamically using "[[S0:CONVIO_API_KEY]]".
- 
+
 `auth`
 
 An object containing [authentication](http://open.convio.com/api/#main.auth_token.html) information for 
@@ -175,7 +168,15 @@ the current user. This object contains **token**, the authentication token strin
 "auth" or "sso_auth_token", depending on how the token was obtained. If you don't have an authentication 
 token for the user, not a problem &mdash; [luminateExtend.api](#apiObj) will automatically obtain a token 
 when it needs one.
- 
+
+`locale`
+
+The locale for the current user's session, comprised of an ISO-639 language code and an ISO-3166 country 
+code. Currently supported values are "en_US", "es_US", "en_CA", "fr_CA", "en_GB", and "en_AU". (Note that 
+the list of possible values varies by organization.) When a value is provided, the locale session variable 
+is immediately set, it is included in each API request, and the the default locale is set when using the 
+[simpleDateFormat method](#utilsObj).
+
 `path`
 
 An object containing the URL path to your organization's Luminate Online website. **nonsecure** is the path 
@@ -246,23 +247,58 @@ luminateExtend.api.request({
 });
 ```
 
+As of v1.1, luminateExtend.api is an alias for the request method when called directly.
+
+```  js
+var myLoginTestCallback = function(data) {
+  console.log(data);
+};
+
+luminateExtend.api({
+  api: 'cons', 
+  callback: myLoginTestCallback, 
+  data: 'method=loginTest'
+});
+```
+
 The API supports the [Cross-Origin Resource Sharing (CORS)](http://www.w3.org/TR/cors/) spec. With CORS, 
 modern browsers including Firefox 3.5+, Chrome 2+, Safari 4+, Opera 12+, and IE10+ allow for natively 
-making cross-domain XMLHttpRequests thanks to the Access-Control-Allow-Origin HTTP response header. By 
-default, the request method uses XHR in these browsers. However, as currently the API does not respond 
-with the Access-Control-Allow-Credentials header needed to send cookies with cross-domain requests, for 
-any request that requires cookies (i.e. any request that requires authentication), 
-[window.postMessage](https://developer.mozilla.org/en-US/docs/DOM/window.postMessage) is used instead. 
-For older browsers which do not support CORS, namely IE8 and IE9, window.postMessage is *always* used. 
-(Note that the Microsoft-proprietary XDomainRequest is not used because of its limitations, most 
-importantly, the inability to set the Content-Type request header and the same-scheme policy.) For even 
-*older* browsers such as IE7 which do not support window.postMessage, this method falls back to using a 
-hash change transport.
+making cross-domain XMLHttpRequests thanks to the Access-Control-Allow-Origin HTTP response header. The 
+request method uses XHR in these browsers, and as of v1.3, sets the withCredentials property to true to 
+allow for cookies to be sent with each request. For older browsers which do not support CORS, namely IE8 
+and IE9, [window.postMessage](https://developer.mozilla.org/en-US/docs/DOM/window.postMessage) is used as 
+a polyfill. (Note that the Microsoft-proprietary XDomainRequest is not used because of its limitations, 
+most importantly, the inability to set the Content-Type request header and the same-scheme policy.)
 
-The request method accepts one argument, an options object containing the following:
+The request method accepts one argument, an options object, or, as of v1.6, an array of options objects 
+may be provided in order to make multiple requests.
+
+```  js
+luminateExtend.api.request([{
+  api: 'cons', 
+  data: 'method=listUserFields&include_choices=true', 
+  callback: {
+    success: listUserFieldsCallback
+  }
+}, {
+  async: false, 
+  api: 'cons', 
+  data: 'method=getUser', 
+  requiresAuth: true, 
+  callback: {
+    success: getUserCallback
+  }
+}]);
+```
+
+Each options object contains the following:
 
 **api:** The specific API servlet to call. Can be provided as either the full, case-sensitive servlet 
 name, e.g. "CRConsAPI", or a case-insensitive shorthand with "CR" and "API" removed, e.g. "cons".
+
+**async:** Available as of v1.6. A boolean indicating whether or not the request should be made 
+synchronously (the default) or asynchronously. A value of false indicates that the request should not be 
+made until after the previous request has completed, and its callback has been fired.
 
 **callback:** The callback to be used after the request is complete. The JSON response object is passed 
 as the sole argument to the callback. Can be provided as either a function, or an object containing 
@@ -282,29 +318,29 @@ common parameters defined in luminateExtend.global.apiCommon.
 **form:** A selector for a form to be serialized with the request. The result is appended to the data 
 string above.
 
-**requestType:** The type of HTTP request, either "GET", the default, or "POST".
-
 **requiresAuth:** A boolean indicating whether or not the API method being called requires 
 authentication. If true, an auth token is automatically appended to the request data string.
+
+**responseFilter:** Available as of v1.5. An object containing a filter to apply to the response object 
+before it is passed to the callback. The object contains the array in the response object to be filtered, 
+and the filter logic. Filters can be applied using either equal ("==") or not equal ("!=") statements.
+
+``` js
+luminateExtend.api.request({
+  api: 'teamraiser', 
+  data: 'method=getParticipants&fr_id=1234&first_name=John', 
+  responseFilter: {
+    array: 'getParticipantsResponse.participant', 
+    filter: 'personalPagePrivate == false' // or 'personalPagePrivate != true'
+  }, 
+  callback: getParticipantsCallback
+});
+```
 
 **useHTTPS:** A boolean indicating whether or not to use HTTPS when making the request. Some API servlets 
 (namely CRDonationAPI and CRTeamraiserAPI) must always be called over a secure channel, in which case 
 this setting is ignored. Otherwise, the default depends on the protocol of the requesting page, meaning 
 false for pages served over HTTP or true for pages served over HTTPS.
-
-Note that as of v1.1, luminateExtend.api is an alias for the request method when called directly.
-
-```  js
-var myLoginTestCallback = function(data) {
-  console.log(data);
-};
-
-luminateExtend.api({
-  api: 'cons', 
-  callback: myLoginTestCallback, 
-  data: 'method=loginTest'
-});
-```
 
 `getAuth`
 
@@ -321,8 +357,11 @@ The getAuth method accepts one argument, an options object containing the follow
 **callback:** The callback to be used after the auth token is retrieved. Note that unlike the request 
 method, the callback is passed no data.
 
+**useCache:** A boolean indicating whether or not to use the existing authentication token if one is 
+available. The default is true.
+
 **useHTTPS:** A boolean indicating whether or not to use HTTPS when making the request.
- 
+
 `bind`
 
 The bind method is used to simplify the process of authoring HTML forms that are intended to call the API 
@@ -341,7 +380,6 @@ When the request method is called ...
  * The value for `contentType` is set to the value of the enctype attribute if defined.
  * Any query strings included in the form action are passed as `data`.
  * The form's ID is passed as the value for `form`, and if the form has no ID, one is added.
- * The value for `requestType` is determined by the form method.
  * The value for `useHTTP` is determined by the protocol of the form action, or if the form action is 
  relative, by the protocol of the requesting page.
  * The values for `callback` and `requiresAuth` are set using an HTML5 data- attribute, data-luminateApi. 
@@ -528,29 +566,34 @@ $.each(teamraisers, function() {
 });
 ```
 
-The simpleDateFormat method accepts two arguments:
+The simpleDateFormat method accepts three arguments:
 
 **unformattedDate:** The date to be formatted. Can be provided as either an ISO-8601 string, or as a 
 JavaScript Date object.
 
 **pattern:** The pattern to use when formatting the date.
 
+**locale:** The locale for returned dates. The names of months and days will be returned in the locale 
+provided. For example, if the locale is es_US, "d 'de' MMMM 'de' yyyy" will return a date such as 
+"6 de julio de 2012". If locale is fr_CA, "'le' d MMMM yyyy k'h'mm" will return a date such as 
+"le 6 juillet 2012 13h00". If no value is provided, the global locale is used.
+
 See [SimpleDateFormatJS](https://github.com/noahcooper/SimpleDateFormatJS) for additional documentation.
 
-<a name="libBrowsers">
+<a name="libBrowsers"></a>
 Browser support
 ---------------
 
 luminateExtend.js includes support for the following browsers:
 
- * IE7+
- * Firefox 3.6+
+ * IE8+
+ * Firefox 3.5+
  * Chrome 2+
  * Safari 4+
  * Opera 9+
  * Android
 
-<a name="libIssues">
+<a name="libIssues"></a>
 Reporting issues
 ----------------
 
